@@ -1,6 +1,7 @@
 package q.stock.product.operation;
 
 import q.stock.product.dao.DAO;
+import q.stock.product.model.entity.Brand;
 import q.stock.product.model.entity.WebApp;
 
 import javax.ejb.EJB;
@@ -28,6 +29,11 @@ public class StockProductApi {
     @GET
     @Path("test")
     public Response testApi(){
+    	Brand b = new Brand();
+		b.setName("brand1");
+		b.setStatus('c');
+		b.setVendorId(5);
+    	dao.persistAndReturn(b);
         return Response.ok().entity("Yes").build();
     }
 

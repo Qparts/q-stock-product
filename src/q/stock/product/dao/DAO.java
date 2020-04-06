@@ -174,7 +174,15 @@ public class DAO {
             return null;
         }
     }
+    
+    
+    @SuppressWarnings("unchecked")
+	public <T> List<T>  findAll(Class<T> klass){
+    	Query q = em.createQuery("SELECT b FROM " + klass.getSimpleName());
+        return q.getResultList();
+    }
 
+    
     @SuppressWarnings("unchecked")
     public <T> T findCondition(Class<T> klass, String columnName, Object val) {
         Query q = em.createQuery("SELECT b FROM " + klass.getSimpleName() + " b WHERE b." + columnName + " = :value");
