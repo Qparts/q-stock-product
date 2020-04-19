@@ -1,10 +1,23 @@
 package q.stock.product.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 
 @Entity
@@ -22,16 +35,22 @@ public class Product implements Serializable {
     @JoinColumn(name="brand_id")
     @ManyToOne
     private Brand brand;
+    @JoinColumn(name="category_id")
+    @ManyToOne
+    private Category category;
     @Column(name="notes")
     private String notes;
-    @JsonIgnore
     @Column(name="created")
-    @Temporal(TemporalType.DATE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private Date created;
     @Column(name="created_by")
     private int createdBy;
     @Column(name="status")
     private char status;
+    
+    @OneToMany(cascade=CascadeType.ALL ,fetch = FetchType.EAGER)
+    @JoinColumn(name="product_id")
+    private Set<ProductPrice> productPrices;
 
     public int getId() {
         return id;
@@ -96,4 +115,21 @@ public class Product implements Serializable {
     public void setStatus(char status) {
         this.status = status;
     }
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public Set<ProductPrice> getProductPrices() {
+		return productPrices;
+	}
+
+	public void setProductPrices(Set<ProductPrice> productPrices) {
+		this.productPrices = productPrices;
+	}
+    
 }

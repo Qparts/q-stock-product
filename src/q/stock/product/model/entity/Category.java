@@ -1,5 +1,6 @@
 package q.stock.product.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -19,9 +20,8 @@ public class Category implements Serializable {
     private String name;
     @Column(name="vendor_id")
     private int vendorId;
-    @JsonIgnore
     @Column(name="created")
-    @Temporal(TemporalType.DATE)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private Date created;
     @Column(name="status")
     private char status;

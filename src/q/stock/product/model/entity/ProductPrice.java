@@ -8,15 +8,16 @@ import java.util.Date;
 
 
 @Entity
-@Table(name="prd_price")
+
+@Table(name="prd_price",uniqueConstraints= {@UniqueConstraint(columnNames={"product_id","price_type"})})
 public class ProductPrice implements Serializable {
     @Id
     @SequenceGenerator(name = "prd_price_id_seq_gen", sequenceName = "prd_price_id_seq", initialValue=1, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "prd_price_id_seq_gen")
     @Column(name="id")
     private int id;
-    @Column(name="product_id")
-    private int productId;
+//    @Column(name="product_id")
+//    private int productId;
     @Column(name="vendor_id")
     private int vendorId;
     @Column(name="price_type")
@@ -34,6 +35,9 @@ public class ProductPrice implements Serializable {
     private int createdBy;
     @Column(name="archived")
     private Date archived;
+    @JsonIgnore
+    @ManyToOne
+    private Product product;
 
 
     public int getId() {
@@ -43,14 +47,14 @@ public class ProductPrice implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
-
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
+//
+//    public int getProductId() {
+//        return productId;
+//    }
+//
+//    public void setProductId(int productId) {
+//        this.productId = productId;
+//    }
 
     public int getVendorId() {
         return vendorId;
@@ -107,4 +111,14 @@ public class ProductPrice implements Serializable {
     public void setArchived(Date archived) {
         this.archived = archived;
     }
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+    
+    
 }

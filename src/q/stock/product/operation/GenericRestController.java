@@ -31,6 +31,16 @@ public class GenericRestController<T extends Serializable> extends BaseDao<T> {
 			return Response.status(500).build();
 		}
 	}
+	
+	@GET
+	@Path("/{parameter}/{value}")
+	public Response findAll(@PathParam("parameter") String parameter ,@PathParam("value") String value ) {
+		try {
+			return Response.ok().entity(super.getAll(parameter,value)).build();
+		} catch (Exception ex) {
+			return Response.status(500).build();
+		}
+	}
 
 	@GET
 	@Path("/{id}")
