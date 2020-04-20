@@ -66,8 +66,7 @@ public abstract class BaseDao<T> {
 	
 	@SuppressWarnings("unchecked")
 	public List<T> getAll(String parameter, String value) {
-		Query query = em.createQuery("SELECT e FROM " + type.getName() +" e where e."+parameter+"=:value");
-		query.setParameter(value, value);
+		Query query = em.createQuery("SELECT e FROM " + type.getName() +" e where e."+parameter+"="+value);
 		return query.getResultList();
 	}
 }
