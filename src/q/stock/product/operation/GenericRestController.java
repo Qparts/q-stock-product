@@ -1,6 +1,8 @@
 package q.stock.product.operation;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -11,6 +13,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 import q.stock.product.dao.BaseDao;
+import q.stock.product.dto.SearchDto;
 
 public class GenericRestController<T extends Serializable> extends BaseDao<T> {
 
@@ -31,12 +34,12 @@ public class GenericRestController<T extends Serializable> extends BaseDao<T> {
 			return Response.status(500).build();
 		}
 	}
-	
+
 	@GET
 	@Path("/{parameter}/{value}")
-	public Response findAll(@PathParam("parameter") String parameter ,@PathParam("value") String value ) {
+	public Response findAll(@PathParam("parameter") String parameter, @PathParam("value") String value) {
 		try {
-			return Response.ok().entity(super.getAll(parameter,value)).build();
+			return Response.ok().entity(super.getAll(parameter, value)).build();
 		} catch (Exception ex) {
 			return Response.status(500).build();
 		}
@@ -78,6 +81,17 @@ public class GenericRestController<T extends Serializable> extends BaseDao<T> {
 		try {
 			super.delete(id);
 			return Response.status(201).build();
+		} catch (Exception ex) {
+			return Response.status(500).build();
+		}
+	}
+
+
+	@POST
+	@Path("/search")
+	public Response filterWithCondition(List<SearchDto> filters) {
+		try {
+			return Response.ok().entity(super.filter(filters)).build();
 		} catch (Exception ex) {
 			return Response.status(500).build();
 		}
