@@ -16,16 +16,18 @@ public class Utils {
 		String filterValue = "";
 		for (SearchDto filter : filters) {
 			if (filter.getOperation().equals("like"))
-				filterValue += "e." + filter.getFieldName() + " like '%" + filter.getValue() + "%'" + " or ";
+				filterValue += filter.getFieldName() + " like '%" + filter.getValue() + "%'" + " or ";
 			else if (filter.getOperation().equals("equal"))
-				filterValue += "e." + filter.getFieldName() + "='" + filter.getValue() + "' or ";
+				filterValue += filter.getFieldName() + "='" + filter.getValue() + "' or ";
 			else if (filter.getOperation().equals("between"))
-				filterValue += "e." + filter.getFieldName() + " between '" + filter.getValue().split(",")[0] + "' and '"
+				filterValue += filter.getFieldName() + " between '" + filter.getValue().split(",")[0] + "' and '"
 						+ filter.getValue().split(",")[0] + "' or ";
 			else if (filter.getOperation().equals("gt"))
-				filterValue += "e." + filter.getFieldName() + ">='" + filter.getValue() + "' or ";
+				filterValue += filter.getFieldName() + ">='" + filter.getValue() + "' or ";
 			else if (filter.getOperation().equals("lt"))
-				filterValue += "e." + filter.getFieldName() + "<='" + filter.getValue() + "' or ";
+				filterValue += filter.getFieldName() + "<='" + filter.getValue() + "' or ";
+			else if (filter.getOperation().equals("in"))
+				filterValue += filter.getFieldName() + " in " + filter.getValue() + " or ";
 		}
 
 		if (filterValue != "") {

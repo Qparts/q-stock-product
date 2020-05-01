@@ -1,7 +1,6 @@
 package q.stock.product.dao;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -81,4 +80,13 @@ public abstract class BaseDao<T> {
 		Query query = em.createQuery(sql);
 		return query.getResultList();
 	}
+
+	public EntityManager getEm() {
+		return em;
+	}
+
+	public void setEm(EntityManager em) {
+		this.em = em;
+	}
+
 }
