@@ -16,6 +16,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -36,9 +37,6 @@ public class Product implements Serializable {
 	@JoinColumn(name = "brand_id")
 	@ManyToOne
 	private Brand brand;
-//	@JoinColumn(name = "category_id")
-//	@ManyToOne
-//	private Category category;
 	@Column(name = "notes")
 	private String notes;
 	@Column(name = "created")
@@ -49,13 +47,13 @@ public class Product implements Serializable {
 	@Column(name = "status")
 	private char status;
 
+
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "product_id")
 	private Set<ProductPrice> productPrices;
 
 	@ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	@JoinTable(name = "prd_product_category", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-//	@JoinColumn(name = "product_id")
 	private Set<Category> categories;
 
 	public int getId() {
@@ -145,5 +143,7 @@ public class Product implements Serializable {
 	public void setCategories(Set<Category> categories) {
 		this.categories = categories;
 	}
+
+
 
 }

@@ -12,39 +12,37 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@SuppressWarnings("serial")
 @Entity
-@Table(name = "sup_supplier")
-public class Supplier implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+@Table(name = "inv_purchase_order")
+public class PurchaseOrder implements Serializable {
 
 	@Id
-	@SequenceGenerator(name = "sup_supplier_id_seq_gen", sequenceName = "sup_supplier_id_seq", initialValue = 1, allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "sup_supplier_id_seq_gen")
+	@SequenceGenerator(name = "inv_purchase_order_id_seq_gen", sequenceName = "inv_purchase_order_id_seq", initialValue = 1, allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "inv_purchase_order_id_seq_gen")
 	@Column(name = "id")
 	private int id;
 	@Column(name = "vendor_id")
 	private int vendorId;
+	@Column(name = "created")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	private Date created;
 	@Column(name = "created_by")
 	private int createdBy;
-	@Column(name = "status")
-	private char status;
-	@Column(name = "phone")
-	private String phone;
-	@Column(name = "company_name")
-	private String companyName;
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "supplier_id")
-	private Set<Contact> contacts;
+	@Column(name = "supplier_id")
+	private int supplierId;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "purchase_id")
+	private Set<PurchaseOrderProducts> purchaseProducts;
+
 	public int getId() {
 		return id;
 	}
@@ -77,36 +75,20 @@ public class Supplier implements Serializable {
 		this.createdBy = createdBy;
 	}
 
-	public char getStatus() {
-		return status;
+	public int getSupplierId() {
+		return supplierId;
 	}
 
-	public void setStatus(char status) {
-		this.status = status;
+	public void setSupplierId(int supplierId) {
+		this.supplierId = supplierId;
 	}
 
-	public String getPhone() {
-		return phone;
+	public Set<PurchaseOrderProducts> getPurchaseProducts() {
+		return purchaseProducts;
 	}
 
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setPurchaseProducts(Set<PurchaseOrderProducts> purchaseProducts) {
+		this.purchaseProducts = purchaseProducts;
 	}
 
-	public String getCompanyName() {
-		return companyName;
-	}
-
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
-	}
-
-	public Set<Contact> getContacts() {
-		return contacts;
-	}
-
-	public void setContacts(Set<Contact> contacts) {
-		this.contacts = contacts;
-	}
-	
 }
