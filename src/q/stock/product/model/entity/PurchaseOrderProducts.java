@@ -27,7 +27,7 @@ public class PurchaseOrderProducts implements Serializable {
 	@Column(name = "quantity")
 	private int quantity;
 	@Column(name = "purchase_price")
-	private double purchasePrice;
+	private double price;
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -52,12 +52,12 @@ public class PurchaseOrderProducts implements Serializable {
 		this.quantity = quantity;
 	}
 
-	public double getPurchasePrice() {
-		return purchasePrice;
+	public double getPrice() {
+		return price;
 	}
 
-	public void setPurchasePrice(double purchasePrice) {
-		this.purchasePrice = purchasePrice;
+	public void setPrice(double price) {
+		this.price = price;
 	}
 
 	public PurchaseOrder getPurchaseOrder() {
@@ -75,7 +75,5 @@ public class PurchaseOrderProducts implements Serializable {
 	public void setProductId(int productId) {
 		this.productId = productId;
 	}
-	
-	
 
 }

@@ -58,8 +58,7 @@ public class GenericRestController<T extends Serializable> extends BaseDao<T> {
 	@POST
 	public Response creatItem(T entity) {
 		try {
-			super.create(entity);
-			return Response.status(201).build();
+			return Response.ok().entity(super.create(entity)).build();
 		} catch (Exception ex) {
 			return Response.status(500).build();
 		}
@@ -86,12 +85,22 @@ public class GenericRestController<T extends Serializable> extends BaseDao<T> {
 		}
 	}
 
-
 	@POST
 	@Path("/search")
 	public Response filterWithCondition(List<SearchDto> filters) {
 		try {
 			return Response.ok().entity(super.filter(filters)).build();
+		} catch (Exception ex) {
+			return Response.status(500).build();
+		}
+	}
+
+	@POST
+	@Path("/saveAll")
+	public Response saveAll(List<T> entities) {
+		try {
+			super.SaveAll(entities);
+			return Response.status(200).build();
 		} catch (Exception ex) {
 			return Response.status(500).build();
 		}

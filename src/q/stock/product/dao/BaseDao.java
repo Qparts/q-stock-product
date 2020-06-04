@@ -6,6 +6,8 @@ import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.transaction.NotSupportedException;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import q.stock.product.dto.SearchDto;
@@ -41,6 +43,14 @@ public abstract class BaseDao<T> {
 		em.persist(t);
 		userTransaction.commit();
 		return t;
+	}
+
+	public void SaveAll(List<T> items) throws Exception {
+		userTransaction.begin();
+		for (T item : items) {
+			em.persist(item);
+		}
+		userTransaction.commit();
 	}
 
 	public void delete(final Object id) throws Exception {
@@ -87,6 +97,14 @@ public abstract class BaseDao<T> {
 
 	public void setEm(EntityManager em) {
 		this.em = em;
+	}
+
+	public UserTransaction getUserTransaction() {
+		return userTransaction;
+	}
+
+	public void setUserTransaction(UserTransaction userTransaction) {
+		this.userTransaction = userTransaction;
 	}
 
 }

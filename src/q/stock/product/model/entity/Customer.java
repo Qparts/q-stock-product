@@ -20,7 +20,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "cst_customer")
-public class Customer implements Serializable{
+public class Customer implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@SequenceGenerator(name = "cst_customer_id_seq_gen", sequenceName = "cst_customer_id_seq", initialValue = 1, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.AUTO, generator = "cst_customer_id_seq_gen")
@@ -42,6 +46,10 @@ public class Customer implements Serializable{
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "customer_id")
 	private Set<Address> addresses;
+	@Column(name = "phone")
+	private String phone;
+	@Column(name = "email")
+	private String email;
 
 	public int getId() {
 		return id;
@@ -107,4 +115,21 @@ public class Customer implements Serializable{
 		this.addresses = addresses;
 	}
 
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	
 }
