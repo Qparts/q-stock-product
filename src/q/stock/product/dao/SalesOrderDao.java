@@ -32,35 +32,30 @@ public class SalesOrderDao extends BaseDao<SalesOrder> {
 //			getUserTransaction().begin();
 		for (SalesOrderProduct salesProduct : salesOrder.getSalesOrderProducts()) {
 			int productQuantity = salesProduct.getQuantity();
-			if (!checkQuantity(salesProduct)) {
-				
-				salesOrder.setErrorMessage("No Enoogh Quantity in Product : " + productName(salesProduct.getProductId()));
-				return salesOrder;
-			} else {
-				List<LiveStockPurchaseProductDto> liveStockProducts = getLiveStockPurchaseProducts(
-						salesProduct.getProductId());
-				int index = 0;
-				while (productQuantity > 0) {
-					SalesOrderProduct currentSalesOrderProduct = new SalesOrderProduct(salesProduct.getId(),
-							salesProduct.getProductId(), salesProduct.getPurchaseProductId(), salesProduct.getPrice(),
-							salesProduct.getQuantity(), salesProduct.getSalesOrder());
-					int liveStockQuantityTemp;
-					if (productQuantity > liveStockProducts.get(index).getLiveStockQuantity()) {
-						liveStockQuantityTemp = 0;
-						currentSalesOrderProduct.setQuantity(liveStockProducts.get(index).getLiveStockQuantity());
-					} else {
-						liveStockQuantityTemp = liveStockProducts.get(index).getLiveStockQuantity() - productQuantity;
-						currentSalesOrderProduct.setQuantity(productQuantity);
-					}
-
-					currentSalesOrderProduct.setPurchaseProductId(liveStockProducts.get(index).getPurchaseProductId());
-					productQuantity -= liveStockProducts.get(index).getLiveStockQuantity();
-					salesOrderProducts.add(currentSalesOrderProduct);
-					liveStockProducts.get(index).setLiveStockQuantity(liveStockQuantityTemp);
-					updateLiveStock(liveStockProducts.get(index));
-					index++;
+			List<LiveStockPurchaseProductDto> liveStockProducts = getLiveStockPurchaseProducts(
+					salesProduct.getProductId());
+			int index = 0;
+			while (productQuantity > 0) {
+				SalesOrderProduct currentSalesOrderProduct = new SalesOrderProduct(salesProduct.getId(),
+						salesProduct.getProductId(), salesProduct.getPurchaseProductId(), salesProduct.getPrice(),
+						salesProduct.getQuantity(), salesProduct.getSalesOrder());
+				int liveStockQuantityTemp;
+				if (productQuantity > liveStockProducts.get(index).getLiveStockQuantity()) {
+					liveStockQuantityTemp = 0;
+					currentSalesOrderProduct.setQuantity(liveStockProducts.get(index).getLiveStockQuantity());
+				} else {
+					liveStockQuantityTemp = liveStockProducts.get(index).getLiveStockQuantity() - productQuantity;
+					currentSalesOrderProduct.setQuantity(productQuantity);
 				}
+
+				currentSalesOrderProduct.setPurchaseProductId(liveStockProducts.get(index).getPurchaseProductId());
+				productQuantity -= liveStockProducts.get(index).getLiveStockQuantity();
+				salesOrderProducts.add(currentSalesOrderProduct);
+				liveStockProducts.get(index).setLiveStockQuantity(liveStockQuantityTemp);
+				updateLiveStock(liveStockProducts.get(index));
+				index++;
 			}
+
 		}
 		salesOrder.setSalesOrderProducts(salesOrderProducts);
 		em.persist(salesOrder);
@@ -70,8 +65,15 @@ public class SalesOrderDao extends BaseDao<SalesOrder> {
 	}
 
 	private void updateLiveStock(LiveStockPurchaseProductDto liveStockPurchaseProductDto) {
-		em.createNativeQuery("UPDATE inv_live_stock SET quantity =" + liveStockPurchaseProductDto.getLiveStockQuantity()
-				+ " where id=" + liveStockPurchaseProductDto.getLiveStockId()).executeUpdate();
+		if (liveStockPurchaseProductDto.getLiveStockQuantity() > 0) {
+			em.createNativeQuery(
+					"UPDATE inv_live_stock SET quantity =" + liveStockPurchaseProductDto.getLiveStockQuantity()
+							+ " where id=" + liveStockPurchaseProductDto.getLiveStockId())
+					.executeUpdate();
+		} else {
+			em.createNativeQuery("delete from inv_live_stock where id=" + liveStockPurchaseProductDto.getLiveStockId())
+					.executeUpdate();
+		}
 
 	}
 

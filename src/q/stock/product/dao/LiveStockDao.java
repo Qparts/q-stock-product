@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.persistence.Query;
 
+import q.stock.product.dto.ProductLiveStockQuantity;
 import q.stock.product.model.entity.LiveStock;
 
 @Stateless
@@ -18,4 +19,5 @@ public class LiveStockDao extends BaseDao<LiveStock> {
 		List<Integer> products = q.getResultList();
 		return products;
 	}
+	
 }

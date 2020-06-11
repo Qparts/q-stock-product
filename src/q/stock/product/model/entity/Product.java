@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -46,7 +47,10 @@ public class Product implements Serializable {
 	private int createdBy;
 	@Column(name = "status")
 	private char status;
-
+	@Transient
+	private double price;
+	@Transient
+	private int quantity;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "product_id")
@@ -144,6 +148,20 @@ public class Product implements Serializable {
 		this.categories = categories;
 	}
 
+	public double getPrice() {
+		return price;
+	}
 
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 
 }
