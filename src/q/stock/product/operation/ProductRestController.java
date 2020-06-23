@@ -47,5 +47,16 @@ public class ProductRestController extends GenericRestController<Product> {
 			return Response.status(500).build();
 		}
 	}
+	
+	@GET
+	@Path("/productDetial/{id}")
+	public Response findItem(@PathParam("id") int id) {
+		try {
+			return Response.ok().entity(productService.getProductDetials(id)).build();
+		} catch (Exception ex) {
+			return Response.status(500).build();
+		}
+	}
+
 
 }
