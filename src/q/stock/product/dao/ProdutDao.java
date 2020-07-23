@@ -89,13 +89,13 @@ public class ProdutDao extends BaseDao<Product> {
 		
 		Query q = em.createNativeQuery("select  div(sum(purchase_price),count(*)) from inv_purchase_order_products where product_id ="+id);
 		BigDecimal averagePrice = (BigDecimal) q.getResultList().get(0);
-		productDetials.setAveragePrice(averagePrice.doubleValue());
+		productDetials.setAveragePrice(averagePrice==null?0 :averagePrice.doubleValue());
 		
 		Query numberOfPreviousYearSalesOrder = em.createNativeQuery("select count(*)  from inv_sales_order s\r\n" + 
 				"join inv_sales_order_product p on s.id = p.sales_id\r\n" + 
 				"where created > (select  (NOW() - interval '1 year')) and p.product_id ="+id);
 		BigInteger previousYearSalesOrders =  (BigInteger) numberOfPreviousYearSalesOrder.getResultList().get(0);
-		productDetials.setPreviousYearSalesOrders(previousYearSalesOrders.intValue());
+		productDetials.setPreviousYearSalesOrders(previousYearSalesOrders==null?0:previousYearSalesOrders.intValue());
 		
 		
 		Query numberOfPreviousYearPurchaseOrder = em.createNativeQuery("select count(*)  from inv_purchase_order o\r\n" + 
@@ -103,7 +103,7 @@ public class ProdutDao extends BaseDao<Product> {
 				"where created > (select  (NOW() - interval '1 year')) and p.product_id ="+id);
 		BigInteger previousYearPurchaseOrders = (BigInteger) numberOfPreviousYearPurchaseOrder.getResultList().get(0);
 		
-		productDetials.setPreviousYearPurchaseOrder(previousYearPurchaseOrders.intValue());
+		productDetials.setPreviousYearPurchaseOrder(previousYearPurchaseOrders==null?0:previousYearPurchaseOrders.intValue());
 		
 		Query lastThreePurchaseOrder = em.createQuery("SELECT p.purchaseOrder from PurchaseOrderProducts p where p.productId="+
 		id+" order by p.purchaseOrder.id desc").setMaxResults(3);
