@@ -84,9 +84,11 @@ public class DashboardDao {
 	private void getDailySales(Dashboard dashboard) {
 		List<LocalDate> localDates = LocalDate.now().minusMonths(1).datesUntil(LocalDate.now())
 				.collect(Collectors.toList());
-		Query q = em.createNativeQuery("SELECT count(*) , to_char(created, 'YYYY-MM-DD') from inv_sales_order o\r\n"
-				+ "where o.created between  (select  (NOW() - interval '1 month'))\r\n" + "and  NOW()\r\n"
-				+ "group by to_char(created, 'YYYY-MM-DD')\r\n" + "order by 1\r\n" + "");
+		Query q = em
+				.createNativeQuery("select sum(p.sales_price *p.quantity) , to_char(o.created, 'YYYY-MM-DD')  from \r\n"
+						+ "inv_sales_order_product  p, inv_sales_order o\r\n" + "where o.id = p.sales_id \r\n"
+						+ "and o.created between  (select  (NOW() - interval '1 month')) and NOW()\r\n"
+						+ "group by to_char(o.created, 'YYYY-MM-DD')\r\n" + "order by 1;");
 
 		List<Object[]> dailySales = q.getResultList();
 		Map<String, String> dailySalesMap = new HashMap<String, String>();
@@ -107,9 +109,11 @@ public class DashboardDao {
 	private void getDailyPurchase(Dashboard dashboard) {
 		List<LocalDate> localDates = LocalDate.now().minusMonths(1).datesUntil(LocalDate.now())
 				.collect(Collectors.toList());
-		Query q = em.createNativeQuery("SELECT count(*) , to_char(created, 'YYYY-MM-DD') from inv_purchase_order  o\r\n"
-				+ "where o.created between  (select  (NOW() - interval '1 month'))\r\n" + "and  NOW()\r\n"
-				+ "group by to_char(created, 'YYYY-MM-DD')\r\n" + "order by 1");
+		Query q = em.createNativeQuery(
+				"select sum(p.purchase_price *p.quantity) , to_char(o.created, 'YYYY-MM-DD')  from \r\n"
+						+ "inv_purchase_order_products  p, inv_purchase_order o\r\n" + "where o.id = p.purchase_id \r\n"
+						+ "and o.created between  (select  (NOW() - interval '1 month')) and NOW()\r\n"
+						+ "group by to_char(o.created, 'YYYY-MM-DD')\r\n" + "order by 1;");
 
 		List<Object[]> dailyPurchase = q.getResultList();
 		Map<String, String> dailyPurchaseMap = new HashMap<String, String>();
@@ -129,9 +133,10 @@ public class DashboardDao {
 
 	private void getYearlySales(Dashboard dashboard) {
 		List<String> months = getlastYearMonths();
-		Query q = em.createNativeQuery("select to_char(created, 'YYYY-MM') as month, count(*) as salesNumber\r\n"
-				+ "from inv_sales_order\r\n" + "where created between  (select  (NOW() - interval '1 year'))\r\n"
-				+ "and  NOW()\r\n" + "group by to_char(created, 'YYYY-MM')\r\n" + "order by 1");
+		Query q = em.createNativeQuery("select to_char(o.created, 'YYYY-MM'), sum(p.sales_price *p.quantity)\r\n"
+				+ "from inv_sales_order o , inv_sales_order_product p\r\n" + "where o.id = p.sales_id \r\n"
+				+ "and o.created between  (select  (NOW() - interval '1 year')) and  NOW()\r\n"
+				+ "group by to_char(created, 'YYYY-MM')\r\n" + "order by 1");
 
 		List<Object[]> dailyPurchase = q.getResultList();
 		Map<String, String> yearlSalesMap = new HashMap<String, String>();
@@ -151,9 +156,10 @@ public class DashboardDao {
 
 	private void getYearlyPurchase(Dashboard dashboard) {
 		List<String> months = getlastYearMonths();
-		Query q = em.createNativeQuery("select to_char(created, 'YYYY-MM') as month, count(*) as salesNumber\r\n"
-				+ "from inv_purchase_order\r\n" + "where created between  (select  (NOW() - interval '1 year'))\r\n"
-				+ "and  NOW()\r\n" + "group by to_char(created, 'YYYY-MM')\r\n" + "order by 1");
+		Query q = em.createNativeQuery("select to_char(o.created, 'YYYY-MM'), sum(p.purchase_price *p.quantity)\r\n"
+				+ "from inv_purchase_order o , inv_purchase_order_products p\r\n" + "where o.id = p.purchase_id  \r\n"
+				+ "and o.created between  (select  (NOW() - interval '1 year')) and  NOW()\r\n"
+				+ "group by to_char(created, 'YYYY-MM')\r\n" + "order by 1");
 
 		List<Object[]> dailyPurchase = q.getResultList();
 		Map<String, String> yearlPurchaseMap = new HashMap<String, String>();

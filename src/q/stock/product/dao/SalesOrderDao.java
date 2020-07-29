@@ -18,12 +18,20 @@ import javax.transaction.Transactional;
 
 import q.stock.product.dto.LiveStockPurchaseProductDto;
 import q.stock.product.exception.NoEnoughQuantityException;
+import q.stock.product.model.entity.Customer;
 import q.stock.product.model.entity.SalesOrder;
 import q.stock.product.model.entity.SalesOrderProduct;
 
 @Stateless
 @TransactionManagement(javax.ejb.TransactionManagementType.BEAN)
 public class SalesOrderDao extends BaseDao<SalesOrder> {
+
+	public List<SalesOrder> findSalesForCustomer(int id) {
+		Query query = em
+				.createQuery("SELECT e FROM SalesOrder" + " e where e.customerId" + "=" + id + " order by e.id desc")
+				.setMaxResults(10);
+		return query.getResultList();
+	}
 
 	@Transactional
 	public synchronized SalesOrder createSalesOrder(SalesOrder salesOrder) {
